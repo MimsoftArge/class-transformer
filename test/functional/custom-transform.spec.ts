@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { expect } from "chai";
-import { classToPlain, plainToClass, classToClass } from "../../src/index";
+import { classToPlain, plainToClass, classToClass, ClassTransformOptions } from "../../src/index";
 import { defaultMetadataStorage } from "../../src/storage";
 import { Expose, Transform, Type } from "../../src/decorators";
 import * as moment from "moment";
@@ -130,10 +130,12 @@ describe("custom transformation decorator", () => {
 
         let objArg: any;
         let typeArg: TransformationType;
+        let optionsArg: ClassTransformOptions;
 
-        function transformCallback(value: any, obj: any, type: TransformationType) {
+        function transformCallback(value: any, obj: any, type: TransformationType, options: ClassTransformOptions) {
             objArg = obj;
             typeArg = type;
+            optionsArg = options;
             return value;
         }
 
@@ -146,17 +148,24 @@ describe("custom transformation decorator", () => {
         let plainUser = {
             name: "Johny Cage",
         };
+        let options = {
+            groups: ['user', 'user.email'],
+            version: 2,
+        };
 
-        plainToClass(User, plainUser);
+        plainToClass(User, plainUser, options);
         objArg.should.be.equal(plainUser);
         typeArg.should.be.equal(TransformationType.PLAIN_TO_CLASS);
+        expect(optionsArg).to.equal(options);
 
         const user = new User();
         user.name = "Johny Cage";
+        optionsArg = undefined;
 
-        classToPlain(user);
+        classToPlain(user, options);
         objArg.should.be.equal(user);
         typeArg.should.be.equal(TransformationType.CLASS_TO_PLAIN);
+        expect(optionsArg).to.equal(options);
     });
 
     let model: any;
