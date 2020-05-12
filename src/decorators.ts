@@ -2,7 +2,7 @@ import {ClassTransformer} from "./ClassTransformer";
 import {defaultMetadataStorage} from "./storage";
 import {TypeMetadata} from "./metadata/TypeMetadata";
 import {ExposeMetadata} from "./metadata/ExposeMetadata";
-import {ExposeOptions, ExcludeOptions, TypeHelpOptions, TransformOptions, Discriminator, TypeOptions} from "./metadata/ExposeExcludeOptions";
+import {ExposeOptions, ExcludeOptions, TypeHelpOptions, TransformOptions, TypeOptions} from "./metadata/ExposeExcludeOptions";
 import {ExcludeMetadata} from "./metadata/ExcludeMetadata";
 import {TransformMetadata} from "./metadata/TransformMetadata";
 import {ClassTransformOptions} from "./ClassTransformOptions";
@@ -11,7 +11,7 @@ import {TransformationType} from "./TransformOperationExecutor";
 /**
  * Defines a custom logic for value transformation.
  */
-export function Transform(transformFn: (value: any, obj: any, transformationType: TransformationType) => any, options?: TransformOptions) {
+export function Transform(transformFn: (value: any, obj: any, transformationType: TransformationType, options: ClassTransformOptions) => any, options?: TransformOptions) {
     return function(target: any, key: string) {
         const metadata = new TransformMetadata(target.constructor, key, transformFn, options);
         defaultMetadataStorage.addTransformMetadata(metadata);
