@@ -8,8 +8,8 @@ export class User {
     name: string;
 
     @Type(() => Date)
-    @Transform(value => value.toString(), { toPlainOnly: true })
-    @Transform(value => moment(value), { toClassOnly: true })
+    @Transform(params => params.value.toString(), { toPlainOnly: true })
+    @Transform(params => moment(params.value), { toClassOnly: true })
     date: Date;
 
 }

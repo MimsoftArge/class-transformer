@@ -1,12 +1,11 @@
 import {TransformOptions} from "./ExposeExcludeOptions";
-import {TransformationType} from "../TransformOperationExecutor";
-import {ClassTransformOptions} from "../ClassTransformOptions";
+import {TransformFnParams} from "./TransformParameters";
 
 export class TransformMetadata {
 
     constructor(public target: Function,
                 public propertyName: string,
-                public transformFn: (value: any, key: string, obj: any, transformationType: TransformationType, options: ClassTransformOptions) => any,
+                public transformFn: (params: TransformFnParams) => any,
                 public options: TransformOptions) {
     }
 

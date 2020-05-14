@@ -745,7 +745,7 @@ export class Photo {
     id: number;
 
     @Type(() => Date)
-    @Transform(value => moment(value), { toClassOnly: true })
+    @Transform(params => moment(params.value), { toClassOnly: true })
     date: Moment;
 }
 ```
@@ -759,14 +759,18 @@ it will convert a date value in your photo object to moment date.
 The `@Transform` decorator is given more arguments to let you configure how you want the transformation to be done.
 
 ```
-@Transform((value, key, obj, type, options) => value)
+@Transform((params: TransformFnParams) => params.value)
+// OR
+@Transform(({ value }: TransformFnParams) => value)
 ```
 
-| Argument          | Description
+### TransformFnParams
+| Field          | Description
 |--------------------|---------------------------------------------------------------------------------|
 | `value` | The property value before the transformation.
 | `key` | The property name.
 | `obj` | The transformation source object.
+| `targetType` | The c
 | `type` | The transformation type.
 | `options` | The options given to the input transformation method.
 

@@ -9,7 +9,7 @@ describe("inheritence", () => {
         defaultMetadataStorage.clear();
 
         class Contact {
-            @Transform(value => value.toUpperCase())
+            @Transform(params => params.value.toUpperCase())
             name: string;
             @Type(() => Date)
             birthDate: Date;
@@ -20,9 +20,9 @@ describe("inheritence", () => {
             id: number;
             email: string;
         }
-        
+
         class Student extends User {
-            @Transform(value => value.toUpperCase())
+            @Transform(params => params.value.toUpperCase())
             university: string;
         }
 

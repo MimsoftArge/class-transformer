@@ -5,6 +5,8 @@ import { defaultMetadataStorage } from "../../src/storage";
 import { Expose, Transform, Type } from "../../src/decorators";
 import * as moment from "moment";
 import { TransformationType } from "../../src/TransformOperationExecutor";
+import { TransformFnParams } from "../../src/metadata/TransformParameters";
+
 
 describe("custom transformation decorator", () => {
 
@@ -14,7 +16,7 @@ describe("custom transformation decorator", () => {
         class User {
 
             @Expose({ name: "user_name" })
-            @Transform(value => value.toUpperCase())
+            @Transform(params => params.value.toUpperCase())
             name: string;
         }
 
@@ -35,8 +37,8 @@ describe("custom transformation decorator", () => {
 
             name: string;
 
-            @Transform(value => value.toString(), { toPlainOnly: true })
-            @Transform(value => moment(value), { toClassOnly: true })
+            @Transform(params => params.value.toString(), { toPlainOnly: true })
+            @Transform(params => moment(params.value), { toClassOnly: true })
             date: Date;
 
         }
@@ -78,11 +80,11 @@ describe("custom transformation decorator", () => {
             name: string;
 
             @Type(() => Date)
-            @Transform(value => moment(value), { since: 1, until: 2 })
+            @Transform(params => moment(params.value), { since: 1, until: 2 })
             date: Date;
 
             @Type(() => Date)
-            @Transform(value => value.toString(), { groups: ["user"] })
+            @Transform(params => params.value.toString(), { groups: ["user"] })
             lastVisitDate: Date;
 
         }
@@ -130,15 +132,17 @@ describe("custom transformation decorator", () => {
 
         let keyArg: string;
         let objArg: any;
+        let targetArg: Function;
         let typeArg: TransformationType;
         let optionsArg: ClassTransformOptions;
 
-        function transformCallback(value: any, key: string, obj: any, type: TransformationType, options: ClassTransformOptions) {
-            keyArg = key;
-            objArg = obj;
-            typeArg = type;
-            optionsArg = options;
-            return value;
+        function transformCallback(params: TransformFnParams) {
+            keyArg = params.key;
+            objArg = params.obj;
+            targetArg = params.targetType;
+            typeArg = params.transformationType;
+            optionsArg = params.options;
+            return params.value;
         }
 
         class User {
@@ -158,6 +162,7 @@ describe("custom transformation decorator", () => {
         plainToClass(User, plainUser, options);
         keyArg.should.be.equal("name");
         objArg.should.be.equal(plainUser);
+        targetArg.should.be.equal(User);
         typeArg.should.be.equal(TransformationType.PLAIN_TO_CLASS);
         expect(optionsArg).to.equal(options);
 
@@ -168,6 +173,7 @@ describe("custom transformation decorator", () => {
         classToPlain(user, options);
         keyArg.should.be.equal("name");
         objArg.should.be.equal(user);
+        targetArg.should.be.equal(User);
         typeArg.should.be.equal(TransformationType.CLASS_TO_PLAIN);
         expect(optionsArg).to.equal(options);
     });
@@ -213,7 +219,7 @@ describe("custom transformation decorator", () => {
                 public address: Address;
 
                 @Type(() => Hobby)
-                @Transform(value => value.filter((hobby: any) => hobby.type === "sport"), { toClassOnly: true })
+                @Transform(params => params.value.filter((hobby: any) => hobby.type === "sport"), { toClassOnly: true })
                 public hobbies: Hobby[];
 
                 public age: number;
@@ -242,7 +248,7 @@ describe("custom transformation decorator", () => {
             class Relaxing extends Hobby { }
 
             class Programming extends Hobby {
-                @Transform((value: string) => value.toUpperCase())
+                @Transform(params => params.value.toUpperCase())
                 specialAbility: string;
             }
 
@@ -290,7 +296,7 @@ describe("custom transformation decorator", () => {
             class Relaxing extends Hobby { }
 
             class Programming extends Hobby {
-                @Transform((value: string) => value.toUpperCase())
+                @Transform(params => params.value.toUpperCase())
                 specialAbility: string;
             }
 
@@ -337,7 +343,7 @@ describe("custom transformation decorator", () => {
             class Relaxing extends Hobby { }
 
             class Programming extends Hobby {
-                @Transform((value: string) => value.toUpperCase())
+                @Transform(params => params.value.toUpperCase())
                 specialAbility: string;
             }
 
@@ -384,7 +390,7 @@ describe("custom transformation decorator", () => {
             class Relaxing extends Hobby { }
 
             class Programming extends Hobby {
-                @Transform((value: string) => value.toUpperCase())
+                @Transform(params => params.value.toUpperCase())
                 specialAbility: string;
             }
 
@@ -427,7 +433,7 @@ describe("custom transformation decorator", () => {
             class Relaxing extends Hobby { }
 
             class Programming extends Hobby {
-                @Transform((value: string) => value.toUpperCase())
+                @Transform(params => params.value.toUpperCase())
                 specialAbility: string;
             }
 
@@ -470,7 +476,7 @@ describe("custom transformation decorator", () => {
             class Relaxing extends Hobby { }
 
             class Programming extends Hobby {
-                @Transform((value: string) => value.toUpperCase())
+                @Transform(params => params.value.toUpperCase())
                 specialAbility: string;
             }
 
@@ -519,7 +525,7 @@ describe("custom transformation decorator", () => {
             class Relaxing extends Hobby { }
 
             class Programming extends Hobby {
-                @Transform((value: string) => value.toUpperCase())
+                @Transform(params => params.value.toUpperCase())
                 specialAbility: string;
             }
 
@@ -562,7 +568,7 @@ describe("custom transformation decorator", () => {
             class Relaxing extends Hobby { }
 
             class Programming extends Hobby {
-                @Transform((value: string) => value.toUpperCase())
+                @Transform(params => params.value.toUpperCase())
                 specialAbility: string;
             }
 
@@ -616,7 +622,7 @@ describe("custom transformation decorator", () => {
             class Relaxing extends Hobby { }
 
             class Programming extends Hobby {
-                @Transform((value: string) => value.toUpperCase())
+                @Transform(params => params.value.toUpperCase())
                 specialAbility: string;
             }
 
@@ -660,7 +666,7 @@ describe("custom transformation decorator", () => {
             class Relaxing extends Hobby { }
 
             class Programming extends Hobby {
-                @Transform((value: string) => value.toUpperCase())
+                @Transform(params => params.value.toUpperCase())
                 specialAbility: string;
             }
 

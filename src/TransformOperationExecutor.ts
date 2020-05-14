@@ -306,7 +306,14 @@ export class TransformOperationExecutor {
         }
 
         metadatas.forEach(metadata => {
-            value = metadata.transformFn(value, key, obj, transformationType, this.options);
+            value = metadata.transformFn({
+                value,
+                key,
+                obj,
+                targetType: target,
+                transformationType,
+                options: this.options
+            });
         });
 
         return value;
