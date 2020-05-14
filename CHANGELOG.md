@@ -1,5 +1,11 @@
 # Changelog and release notes
 
+### 0.4.0 [BREAKING CHANGE]
+
+#### Changed
+
+- Replaced parameters of transformFn with plain object (`TransformFnParams`)
+- Add the field `targetType` to `TransformFnParams`
 
 ### 0.3.0 [BREAKING CHANGE]
 
